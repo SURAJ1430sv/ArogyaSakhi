@@ -330,7 +330,54 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/educational-content", async (req, res) => {
     try {
       const category = req.query.category as string;
-      const content = await storage.getEducationalContent(category);
+      let content = await storage.getEducationalContent(category);
+      if (!content || content.length === 0) {
+        // Seed a minimal set of educational articles if the store is empty (useful for new DBs)
+        const seedItems = [
+          {
+            category: "pcod_pcos",
+            title: "Understanding PCOD & PCOS",
+            content:
+              "PCOS is a hormonal disorder affecting 1 in 10 women. Learn symptoms, diagnosis and management strategies.",
+            type: "article" as const,
+          },
+          {
+            category: "pcod_pcos",
+            title: "Managing PCOS Naturally",
+            content:
+              "Lifestyle changes like regular exercise, balanced diet, and stress management can improve PCOS symptoms.",
+            type: "article" as const,
+          },
+          {
+            category: "breast_cancer",
+            title: "Breast Cancer Prevention & Early Detection",
+            content:
+              "Perform monthly self-exams and follow screening guidelines. Early detection significantly improves outcomes.",
+            type: "article" as const,
+          },
+          {
+            category: "menstrual_health",
+            title: "Complete Menstrual Health Guide",
+            content:
+              "Understand your cycle, track symptoms, practice good hygiene, and know when to seek medical advice.",
+            type: "article" as const,
+          },
+          {
+            category: "menstrual_health",
+            title: "You can't exercise during periods",
+            content:
+              "Myth: Light to moderate exercise can reduce cramps and improve mood during menstruation.",
+            type: "myth_buster" as const,
+          },
+        ];
+
+        for (const item of seedItems) {
+          try {
+            await storage.createEducationalContent(item as any);
+          } catch {}
+        }
+        content = await storage.getEducationalContent(category);
+      }
       res.json(content);
     } catch (error) {
       res.status(500).json({ error: "Failed to fetch educational content" });

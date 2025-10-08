@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ## # 🩺 ArogyaSakhi
 
 A women-centric health and wellness platform designed to empower women with easy access to medical resources, health tracking, and awareness tools.
@@ -70,3 +71,6 @@ Step 4 : Then run "npm run dev"
 Download postgresql for the database where your data is going to add and show it.
  # In  .env file you have to make small change  you have to add your sql id link and sql password 
 Example : DATABASE_URL="postgresql://postgres:suraj@localhost:5432/ArogyaSakhi"
+=======
+# ArogyaSakhi
+>>>>>>> 769c134a385afe3284645f9d99dc41e3cd5c1e1e

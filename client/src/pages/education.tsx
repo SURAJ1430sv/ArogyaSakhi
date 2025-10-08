@@ -1,12 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MythBuster from "@/components/education/myth-buster";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { BookOpen, Shield, Heart, Search } from "lucide-react";
 
 export default function Education() {
+  const [selectedArticle, setSelectedArticle] = useState<any | null>(null);
   const { data: educationalContent } = useQuery({
     queryKey: ["/api/educational-content"],
   });
@@ -124,8 +127,8 @@ export default function Education() {
                               <h4 className="text-lg font-semibold text-gray-800">{article.title}</h4>
                               <Badge variant="outline">Article</Badge>
                             </div>
-                            <p className="text-gray-600 mb-4">{article.content}</p>
-                            <Button variant="outline" size="sm">
+                            <p className="text-gray-600 mb-4 line-clamp-3">{article.content}</p>
+                            <Button variant="outline" size="sm" onClick={() => setSelectedArticle(article)}>
                               Read Full Article
                             </Button>
                           </CardContent>
@@ -191,6 +194,22 @@ export default function Education() {
           </div>
         </div>
       </section>
+
+      {/* Full Article Dialog */}
+      <Dialog open={!!selectedArticle} onOpenChange={(open) => !open && setSelectedArticle(null)}>
+        <DialogContent className="max-w-2xl">
+          {selectedArticle && (
+            <div>
+              <DialogHeader>
+                <DialogTitle>{selectedArticle.title}</DialogTitle>
+              </DialogHeader>
+              <div className="mt-4 text-gray-700 whitespace-pre-line">
+                {selectedArticle.content}
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
